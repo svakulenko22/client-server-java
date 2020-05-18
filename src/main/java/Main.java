@@ -21,13 +21,13 @@ public class Main {
 
         try {
             byte[] encodedPacket = packet.toPacket();
-            System.out.println(packet);
             System.out.println("Out packet: ");
+            System.out.println(packet);
 
             // sent to http
 
             Packet decodedPacket = new Packet(encodedPacket);
-            System.out.println("Int packet: ");
+            System.out.println("In packet: ");
             System.out.println(decodedPacket);
         } catch (Exception e) {
             e.printStackTrace();
