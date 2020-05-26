@@ -20,6 +20,7 @@ public class Message {
 
 
     }
+
     private Integer cType;
     private Integer bUserId;
     private String message;

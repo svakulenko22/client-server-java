@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 
 @Data
 public class Packet {
+
     public final static Byte bMagic = 0x13;
     UnsignedLong bPktId;
     Byte bSrc;

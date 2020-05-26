@@ -2,7 +2,6 @@ import classes.AESHelper;
 import com.google.common.primitives.UnsignedLong;
 import entity.Message;
 import entity.Packet;
-import org.junit.Before;
 import org.junit.Test;
 
 
