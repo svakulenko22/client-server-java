@@ -13,13 +13,14 @@ public class Main {
 
         Message testMessage = new Message(3, 4, "test");
         Packet packet = new Packet((byte) 1, moreThanLongbPktId, testMessage);
-        System.out.println("Out packet: ");
-        System.out.println(packet);
 
         try {
             byte[] encodedPacket = packet.toPacket();
+            System.out.println("Out packet: ");
+            System.out.println(packet);
+
             Packet decodedPacket = new Packet(encodedPacket);
-            System.out.println("Int packet: ");
+            System.out.println("In packet: ");
             System.out.println(decodedPacket);
         } catch (Exception e) {
             e.printStackTrace();
