@@ -18,8 +18,8 @@ public class Message {
         ADD_PRODUCT_TITLE,
         SET_PRODUCT_TO_GROUP
 
-
     }
+
     private Integer cType;
     private Integer bUserId;
     private String message;

@@ -12,6 +12,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Thread.MAX_PRIORITY;
+
 
 public class Client {
 
@@ -50,7 +52,9 @@ public class Client {
             threadPool.execute(runnable);
 
             threadPool.shutdown();
-            threadPool.awaitTermination(15, TimeUnit.SECONDS);
+
+//            threadPool.awaitTermination(15, TimeUnit.SECONDS);
+            threadPool.awaitTermination(MAX_PRIORITY, TimeUnit.HOURS);
 
             network.close();
 

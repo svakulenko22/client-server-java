@@ -11,10 +11,11 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-public class AESHelper {
+import static classes.util.Constants.IV;
+import static classes.util.Constants.KEY;
 
-    private static final String KEY = "HSGDHFNHGFDGFDGH";
-    private static final String IV = "JHGDFGBDGFHYTFGD";
+
+public class AESHelper {
 
     private static final SecretKeySpec SECRET_KEY_SPEC = new SecretKeySpec(KEY.getBytes(), "AES");
     private static final IvParameterSpec IV_PARAMETER_SPEC = new IvParameterSpec(IV.getBytes());
