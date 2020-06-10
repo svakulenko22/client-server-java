@@ -12,7 +12,7 @@ public interface Network {
 
     void connect() throws IOException;
 
-    default void reconnect() throws IOException { }
+    default void reconnect() throws IOException { }   // UDP
 
     default boolean isConnected() {return false;}
 

@@ -1,26 +1,54 @@
-import com.google.common.primitives.UnsignedLong;
-import entity.Message;
-import entity.Packet;
+import config.DatabaseConfig;
+import entity.Product;
+import service.ProductService;
+import service.impl.ProductServiceImpl;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.Thread.MAX_PRIORITY;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        UnsignedLong moreThanLongbPktId = UnsignedLong.valueOf(Long.MAX_VALUE);
-        moreThanLongbPktId = moreThanLongbPktId.plus(UnsignedLong.valueOf("2305"));
+        DatabaseConfig.connect();
 
-        System.out.println("UnsignedLong moreThanLongbPktId: " + moreThanLongbPktId.toString());
-        System.out.println("long moreThanLongbPktId: " + moreThanLongbPktId.longValue());
+        final ExecutorService threadPool = Executors.newFixedThreadPool(1);
 
-        Message testMessage = new Message(3, 4, "test");
-        Packet packet = new Packet((byte) 1, moreThanLongbPktId, testMessage);
-        System.out.println("Out packet: ");
-        System.out.println(packet);
-        byte[] encodedPacket = packet.toPacket();
-        try {
-            Packet decodedPacket = new Packet(encodedPacket);
-            System.out.println("Int packet: ");
-            System.out.println(decodedPacket);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Runnable runnable = Main::makingProducts;
+        threadPool.execute(runnable);
+
+        threadPool.shutdown();
+        threadPool.awaitTermination(MAX_PRIORITY, TimeUnit.HOURS);
+
+        DatabaseConfig.close();
+
+    }
+
+    private static synchronized void makingProducts() {
+
+        ProductService productService = new ProductServiceImpl();
+
+        final Product product = new Product();
+        product.setName("Гречка");
+        product.setPrice(40.00);
+        product.setCount(20);
+
+        final Integer savedId = productService.save(product);
+
+        final Product productById = productService.findById(savedId);
+        System.out.println("Product by id: " + productById.toString());
+
+        final List<Product> products = productService.findAll();
+       // for (Product elem : products) {
+         //   System.out.println(elem);
+        //}
+        products.forEach(System.out::println);
+
+        productById.setPrice(40.01);
+        productService.update(productById);
+
+        productService.delete(productById.getId());
     }
 }
