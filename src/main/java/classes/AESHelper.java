@@ -1,5 +1,7 @@
 package classes;
 
+import utils.Constants;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -13,25 +15,20 @@ import java.util.Base64;
 
 public class AESHelper {
 
-    private static final String KEY = "HSGDHFNHGFDGFDGH";
-    private static final String IV = "JHGDFGBDGFHYTFGD";
+    private static final SecretKeySpec SECRET_KEY_SPEC = new SecretKeySpec(Constants.KEY.getBytes(), "AES");
+    private static final IvParameterSpec IV_PARAMETER_SPEC = new IvParameterSpec(Constants.IV.getBytes());
 
     public static String encode(final String text) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        final SecretKeySpec secretKeySpec = new SecretKeySpec(KEY.getBytes(), "AES");
-        final IvParameterSpec ivParameterSpec = new IvParameterSpec(IV.getBytes());
 
         final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
-        byte[] encodedBytes = cipher.doFinal(text.getBytes());
-        return Base64.getEncoder().encodeToString(encodedBytes);
+        cipher.init(Cipher.ENCRYPT_MODE, SECRET_KEY_SPEC, IV_PARAMETER_SPEC);
+
+        return Base64.getEncoder().encodeToString(cipher.doFinal(text.getBytes()));
     }
 
     public static String decode(final String text) throws InvalidAlgorithmParameterException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
-        final SecretKeySpec secretKeySpec = new SecretKeySpec(KEY.getBytes(), "AES");
-        final IvParameterSpec ivParameterSpec = new IvParameterSpec(IV.getBytes());
-
         final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
+        cipher.init(Cipher.DECRYPT_MODE, SECRET_KEY_SPEC, IV_PARAMETER_SPEC);
 
         final byte[] decodeText = Base64.getDecoder().decode(text.getBytes());
         return new String(cipher.doFinal(decodeText));

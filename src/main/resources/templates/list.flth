@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List</title>
+</head>
+<body>
+<ul>
+    <li>method = ${data.method}</li>
+    <li>requestUri = ${data.requestUri}</li>
+    <li>query = ${data.query}</li>
+    <li>
+        requestUriPathParts:
+        <ul>
+        <#list data.requestUriPathParts as value>
+            <li>${value}</li>
+        </#list>
+        </ul>
+    </li>
+    <li>
+        getRequestParameters:
+        <ul>
+        <#list data.getRequestParameters as key, value><#if value?is_string>
+            <li>${value}</li><#else><li>
+                $key
+                <ul><#list value as subvalue>
+                    <li>${key} = ${subvalue}</li></#list>
+                </ul>
+            </li></#if>
+        </#list>
+        </ul>
+    </li><#if data.postRequestParameters??>
+    <li>
+        postRequestParameters:
+        <ul>
+        <#list data.getRequestParameters as key, value><#if value?is_string>
+            <li>${value}</li><#else><li>
+                $key
+                <ul><#list value as subvalue>
+                    <li>${key} = ${subvalue}</li></#list>
+                </ul>
+            </li></#if>
+        </#list>
+        </ul>
+    </li></#if>
+</ul>
+</body>
+</html>

@@ -1,37 +1,54 @@
-import com.google.common.primitives.UnsignedLong;
-import entity.Message;
-import entity.Packet;
+import config.DatabaseConfig;
+import entity.Product;
+import service.ProductService;
+import service.impl.ProductServiceImpl;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.Thread.MAX_PRIORITY;
 
 public class Main {
+    public static void main(String[] args) throws Exception {
+        DatabaseConfig.connect();
 
-    public static void main(String[] args) {
+        final ExecutorService threadPool = Executors.newFixedThreadPool(1);
 
-        start();
+        Runnable runnable = Main::makingProducts;
+        threadPool.execute(runnable);
+
+        threadPool.shutdown();
+        threadPool.awaitTermination(MAX_PRIORITY, TimeUnit.HOURS);
+
+        DatabaseConfig.close();
+
     }
 
-    private static void start() {
-        UnsignedLong moreThanLongPktId = UnsignedLong.valueOf(Long.MAX_VALUE);
-        moreThanLongPktId = moreThanLongPktId.plus(UnsignedLong.valueOf("2305"));
+    private static synchronized void makingProducts() {
 
-        System.out.println("UnsignedLong moreThanLongPktId: " + moreThanLongPktId.toString());
-        System.out.println("long moreThanLongPktId: " + moreThanLongPktId.longValue());
+        ProductService productService = new ProductServiceImpl();
 
-        Message testMessage = new Message(3, 4, "test");
-        Packet packet = new Packet((byte) 1, moreThanLongPktId, testMessage);
+        final Product product = new Product();
+        product.setName("Гречка");
+        product.setPrice(40.00);
+        product.setCount(20);
 
-        try {
-            byte[] encodedPacket = packet.toPacket();
-            System.out.println("Out packet: ");
-            System.out.println(packet);
+        final Integer savedId = productService.save(product);
 
-            // sent to http
+        final Product productById = productService.findById(savedId);
+        System.out.println("Product by id: " + productById.toString());
 
-            Packet decodedPacket = new Packet(encodedPacket);
-            System.out.println("In packet: ");
-            System.out.println(decodedPacket);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        final List<Product> products = productService.findAll();
+       // for (Product elem : products) {
+         //   System.out.println(elem);
+        //}
+        products.forEach(System.out::println);
+
+        productById.setPrice(40.01);
+        productService.update(productById);
+
+        productService.delete(productById.getId());
     }
 }
-
