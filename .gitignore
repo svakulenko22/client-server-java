@@ -36,3 +36,8 @@ mvnw
 .mvn/wrapper
 
 mvnw.cmd
+src/main/.DS_Store
+src/main/java/.DS_Store
+src/main/java/com/.DS_Store
+src/main/java/com/myserver/.DS_Store
+src/main/java/com/myserver/api/.DS_Store
