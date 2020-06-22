@@ -33,4 +33,6 @@ build/
 mvnw
 
 *.jar
+.mvn/wrapper
 
+mvnw.cmd
